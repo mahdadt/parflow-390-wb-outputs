@@ -1,4 +1,8 @@
-# ParFlow
+# ParFlow-wb-output
+This is a modified version of ParFlow, only to add some more 
+variables to the clm silo output. The goal here is to output
+interception, canopy drip, and canopy storage in order to 
+canlculate water balance on the surface. 
 
 ![ParFlow CI Test](https://github.com/parflow/parflow/workflows/ParFlow%20CI%20Test/badge.svg)
 
