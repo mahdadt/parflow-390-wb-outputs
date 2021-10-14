@@ -44,7 +44,7 @@ subroutine clm_hydro_canopy (clm)
        fpi,               & ! coefficient of interception
        vegt,              & ! frac_veg_nosno*lsai
        xrun,              & ! excess water that exceeds the leaf capacity [mm/s]
-       qflx_candrip,      & ! rate of canopy runoff and snow falling off canopy [mm/s]
+!       qflx_candrip,      & ! rate of canopy runoff and snow falling off canopy [mm/s]
        qflx_through,      & ! direct throughfall [mm/s]
        dz_snowf,          & ! layer thickness rate change due to precipitation [mm/s]
        flfall,            & ! fraction of liquid water within falling precip.
@@ -58,7 +58,7 @@ subroutine clm_hydro_canopy (clm)
 
   !=== End Variable List ===================================================
   
-  qflx_candrip = 0.
+  clm%qflx_candrip = 0.
   qflx_through = 0.
 
   ! ========================================================================
@@ -76,7 +76,7 @@ subroutine clm_hydro_canopy (clm)
 
   if (clm%itypwat==istsoil .OR. clm%itypwat==istwet) then       ! soil or wetland point
 
-     qflx_candrip = 0.                 ! rate of canopy runoff
+     clm%qflx_candrip = 0.             ! rate of canopy runoff
      qflx_through = 0.                 ! precipitation direct through canopy
      clm%qflx_prec_intr = 0.           ! intercepted precipitation  
 
@@ -105,7 +105,7 @@ subroutine clm_hydro_canopy (clm)
 
         ! Initialize rate of canopy runoff and snow falling off canopy
 
-        qflx_candrip = 0.0
+        clm%qflx_candrip = 0.0
 
         ! Excess water that exceeds the leaf capacity
 
@@ -114,7 +114,7 @@ subroutine clm_hydro_canopy (clm)
         ! Test on maximum dew on leaf
 
         if (xrun > 0.) then
-           qflx_candrip = xrun
+           clm%qflx_candrip = xrun
            clm%h2ocan   = h2ocanmx
         endif
 
@@ -124,7 +124,7 @@ subroutine clm_hydro_canopy (clm)
 
      clm%qflx_prec_intr = 0.
      clm%h2ocan   = 0.
-     qflx_candrip = 0.
+     clm%qflx_candrip = 0.
      qflx_through = 0.  
 
   endif
@@ -141,7 +141,7 @@ subroutine clm_hydro_canopy (clm)
   if (clm%frac_veg_nosno == 0) then
      clm%qflx_prec_grnd   = clm%forc_rain + clm%forc_snow
   else
-     clm%qflx_prec_grnd   = qflx_through  + qflx_candrip  
+     clm%qflx_prec_grnd   = qflx_through  + clm%qflx_candrip  
   endif
 
   ! 1.3 The percentage of liquid water by mass, which is arbitrarily set to 

@@ -5,7 +5,8 @@ start_time,pdx,pdy,pdz,ix,iy,nx,ny,nz,nx_f,ny_f,nz_f,nz_rz,ip,npp,npq,npr,gnx,gn
 prcp_pf,tas_pf,u_pf,v_pf,patm_pf,qatm_pf,lai_pf,sai_pf,z0m_pf,displa_pf,                               &
 slope_x_pf,slope_y_pf,                                                                                 &
 eflx_lh_pf,eflx_lwrad_pf,eflx_sh_pf,eflx_grnd_pf,                                                     &
-qflx_tot_pf,qflx_grnd_pf,qflx_soi_pf,qflx_eveg_pf,qflx_tveg_pf,qflx_in_pf,swe_pf,t_g_pf,               &
+qflx_tot_pf,qflx_grnd_pf,qflx_soi_pf,qflx_eveg_pf,qflx_tveg_pf,qflx_in_pf,                             &
+qflx_intcp_pf,qflx_candrp_pf,qflx_h2ocan_pf,swe_pf,t_g_pf,               &
 t_soi_pf,clm_dump_interval,clm_1d_out,clm_forc_veg,clm_output_dir,clm_output_dir_length,clm_bin_output_dir,         &
 write_CLM_binary,slope_accounting_CLM,beta_typepf,veg_water_stress_typepf,wilting_pointpf,field_capacitypf,                 &
 res_satpf,irr_typepf, irr_cyclepf, irr_ratepf, irr_startpf, irr_stoppf, irr_thresholdpf,               &
@@ -97,6 +98,9 @@ clm_last_rst,clm_daily_rst, pf_nlevsoi, pf_nlevlak)
   real(r8) :: qflx_eveg_pf((nx+2)*(ny+2)*3)      ! h2o_flux (veg-e) output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
   real(r8) :: qflx_tveg_pf((nx+2)*(ny+2)*3)      ! h2o_flux (veg-t) output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
   real(r8) :: qflx_in_pf((nx+2)*(ny+2)*3)        ! h2o_flux (infil) output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
+  real(r8) :: qflx_intcp_pf((nx+2)*(ny+2)*3)     ! h2o_flux (interception) output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
+  real(r8) :: qflx_candrp_pf((nx+2)*(ny+2)*3)    ! h2o_flux (canopy drip) output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
+  real(r8) :: qflx_h2ocan_pf((nx+2)*(ny+2)*3)    ! h2o_flux (canopy drip) output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
   real(r8) :: swe_pf((nx+2)*(ny+2)*3)            ! swe              output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
   real(r8) :: t_g_pf((nx+2)*(ny+2)*3)            ! t_grnd           output var to send to ParFlow, on grid w/ ghost nodes for current proc but nz=1 (2D)
   real(r8) :: t_soi_pf((nx+2)*(ny+2)*(pf_nlevsoi+2))!tsoil             output var to send to ParFlow, on grid w/ ghost nodes for current proc, but nz=10 (3D)
@@ -600,6 +604,9 @@ clm_last_rst,clm_daily_rst, pf_nlevsoi, pf_nlevlak)
         qflx_eveg_pf(l)    = clm(t)%qflx_evap_veg 
         qflx_tveg_pf(l)    = clm(t)%qflx_tran_veg
         qflx_in_pf(l)      = clm(t)%qflx_infl 
+        qflx_intcp_pf(l)   = clm(t)%qflx_prec_intr 
+        qflx_candrp_pf(l)  = clm(t)%qflx_candrip
+        qflx_h2ocan_pf(l)  = clm(t)%qflx_candrip
         swe_pf(l)          = clm(t)%h2osno 
         t_g_pf(l)          = clm(t)%t_grnd
         qirr_pf(l)         = clm(t)%qflx_qirr
@@ -615,6 +622,9 @@ clm_last_rst,clm_daily_rst, pf_nlevsoi, pf_nlevlak)
         qflx_eveg_pf(l)    = -9999.0
         qflx_tveg_pf(l)    = -9999.0
         qflx_in_pf(l)      = -9999.0
+        qflx_intcp_pf(l)      = -9999.0
+        qflx_candrp_pf(l)      = -9999.0
+        qflx_h2ocan_pf(l)      = -9999.0
         swe_pf(l)          = -9999.0
         t_g_pf(l)          = -9999.0
         qirr_pf(l)         = -9999.0
